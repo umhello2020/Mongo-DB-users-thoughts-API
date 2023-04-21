@@ -1,17 +1,17 @@
 const { Schema, model } = require('mongoose');
 
-const thoughtSchema = new Schema(
+const reactionSchema = new Schema(
     {
-        thoughtText: {
-            String,
+        reactionId: {
+
         },
-        createdAt: {
+        reactionBody: {
 
         },
         username: {
 
         },
-        reactions: {
+        createdAt: {
             
         }
     }
