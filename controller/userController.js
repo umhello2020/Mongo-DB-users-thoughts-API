@@ -14,7 +14,7 @@ module.exports = {
     async getSingleUser(req, res) {
         try {
             // use id to find the user
-            const user = await User.findById(req.params.userId);
+            const user = await User.findById(req.params.userid);
 
             if(!user) {
                 return res.status(404).json({ message: 'Sorry, could not find a user with that ID.'});
@@ -39,7 +39,7 @@ module.exports = {
         try {
             // shorthand method combining findOneAndUpdate() and findById()
             const user = await User.findByIdAndUpdate(
-                req.params.id, // ID of the user we wish to update
+                req.params.userid, // ID of the user we wish to update
                 { $set: req.body }, // using the `$set` operator to assign the designated fields in the document to the corresponding values in req.body
                 { new: true } // used to asure that the document is returned after the update and not before
             );
@@ -56,13 +56,13 @@ module.exports = {
     async deleteUser(req, res) {
         try {
             // first find the user we wish to delete
-            const user = await User.findById(req.params.id);
+            const user = await User.findOneAndRemove({_id: req.params.userid});
             // make sure the user exists
             if (!user) {
                 return res.status(404).json({ message: 'Sorry, could not find a user with that ID.'});
             };
             // then remove the user
-            await user.remove();
+            //await user.remove();
             res.json({ message: 'User successfully deleted!'});
         } catch (err) {
             res.status(500).json(err);
@@ -72,8 +72,8 @@ module.exports = {
     async addUserFriend(req, res) {
         try {
             const user = await User.findByIdAndUpdate(
-                req.params.userId, // ID of the user who is adding a friend
-                { $addToSet: { friends: req.params.friendId } }, // we use the `$addToSet` operator to add the friendId into the friend array
+                req.params.userid, // ID of the user who is adding a friend
+                { $addToSet: { friends: req.params.friendid } }, // we use the `$addToSet` operator to add the friendId into the friend array
                 { new: true }
             );
 
@@ -86,8 +86,8 @@ module.exports = {
     async deleteUserFriend(req, res) {
         try {
             const user = await User.findByIdAndUpdate(
-                req.params.userId, // ID of the user who is removing a friend
-                { $pull: { friends: req.params.friendId } }, // we use the `$pull` operator to remove all instances of the friend ID from the friend array
+                req.params.userid, // ID of the user who is removing a friend
+                { $pull: { friends: req.params.friendid } }, // we use the `$pull` operator to remove all instances of the friend ID from the friend array
                 { new: true }
             );
 
