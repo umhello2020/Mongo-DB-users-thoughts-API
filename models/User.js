@@ -1,5 +1,5 @@
-const { Schema, model, Types } = require('mongoose');
-const Thought = require('./Thought');
+const { Schema, model } = require('mongoose');
+// const Thought = require('./Thought');
 
 const userSchema = new Schema(
     {
@@ -13,9 +13,7 @@ const userSchema = new Schema(
             type: String, 
             required: true,
             unique: true,
-            validate: {
-                isEmail: true,
-            }
+            match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/]
         },
         thoughts: [
             {
@@ -41,15 +39,15 @@ const userSchema = new Schema(
 );
 
 // funnction to remove thoughts when associated user is deleted
-userSchema.pre('remove', async function(next) {
-    try {
-        // find all thoughts referencing this user and delete them 
-        await Thought.deleteMany({ user: this._id });
-        next();
-    } catch (err) {
-        next(err);
-    }
-});
+// userSchema.pre('remove', async function(next) {
+//     try {
+//         // find all thoughts referencing this user and delete them 
+//         await Thought.deleteMany({ user: this._id });
+//         next();
+//     } catch (err) {
+//         next(err);
+//     }
+// });
 
 // virtual to retrieve length of the user's friend array when queried
 userSchema.virtual('friendCount').get(function() {

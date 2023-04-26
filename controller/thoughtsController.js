@@ -14,7 +14,7 @@ module.exports = {
     async getSingleThought(req, res) {
         try {
             // use id to find the thought
-            const thought = await Thought.findById(req.params.thoughtId);
+            const thought = await Thought.findById(req.params.thoughtid);
 
             if(!thought) {
                 return res.status(404).json({ message: 'Sorry, could not find a thought with that ID.'});
@@ -39,7 +39,7 @@ module.exports = {
         try {
             // shorthand method combining findOneAndUpdate() and findById()
             const thought = await Thought.findByIdAndUpdate(
-                req.params.id, // ID of the thought we wish to update
+                req.params.thoughtid, // ID of the thought we wish to update
                 { $set: req.body }, // using the `$set` operator to assign the designated fields in the document to the corresponding values in req.body
                 { new: true } // used to asure that the document is returned after the update and not before
             );
@@ -56,13 +56,11 @@ module.exports = {
     async deleteThought(req, res) {
         try {
             // first find the thought we wish to delete
-            const thought = await Thought.findById(req.params.id);
+            const thought = await Thought.findOneAndRemove(req.params.thoughtid);
             // make sure the thought exists
             if (!thought) {
                 return res.status(404).json({ message: 'Sorry, could not find a thought with that ID.'});
             };
-            // then remove the thought
-            await thought.remove();
             res.json({ message: 'Thought successfully deleted!'});
         } catch (err) {
             res.status(500).json(err);
@@ -72,8 +70,8 @@ module.exports = {
     async addThoughtReaction(req, res) {
         try {
             const thought = await Thought.findByIdAndUpdate(
-                req.params.thoughtId, // ID of the thought who is adding a reaction
-                { $addToSet: { reactions: req.params.reactionId } }, // we use the `$addToSet` operator to add the reactionId into the reaction array
+                req.params.thoughtid, // ID of the thought who is adding a reaction
+                { $addToSet: { reactions: req.body } }, // we use the `$addToSet` operator to add the reactionId into the reaction array
                 { new: true }
             );
 
@@ -86,8 +84,8 @@ module.exports = {
     async deleteThoughtReaction(req, res) {
         try {
             const thought = await Thought.findByIdAndUpdate(
-                req.params.thoughtId, // ID of the thought who is removing a reaction
-                { $pull: { reactions: req.params.reactionId } }, // we use the `$pull` operator to remove all instances of the reaction ID from the reaction array
+                req.params.thoughtid, // ID of the thought who is removing a reaction
+                { $pull: { reactions: { reactionId: req.params.reactionId } } }, // we use the `$pull` operator to remove all instances of the reaction ID from the reaction array
                 { new: true }
             );
 
