@@ -25,6 +25,8 @@
 ## Visuals
 
 Here is a demo video walking a user through the application: 
+[Untitled_ Apr 27, 2023 7_12 PM.webm](https://user-images.githubusercontent.com/118483617/235016312-db36dd76-71a3-4b13-9bc3-a38890912bb3.webm)
+
     
 ## Installation
     
